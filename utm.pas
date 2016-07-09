@@ -43,6 +43,9 @@ type
 
 implementation
 
+uses
+  ucommunit;
+
 { tm }
 
 procedure tm.CLEAR;
@@ -151,9 +154,7 @@ begin
   Writeln(F, '<body class="main">  ');
   //==
   Writeln(F, TMTYPE);
-  Writeln(F, '</br>');
   Writeln(F, FTMREC.TITLE);
-  Writeln(F, '</br>');
   //  if fdispanswer then
   //  begin
   //    Writeln(F, '=======================´ð°¸=======================');
@@ -224,14 +225,12 @@ begin
   Writeln(F, '<body class="main">  ');
   //==
   Writeln(F, TMTYPE);
-  Writeln(F, '</br>');
-  Writeln(F, FTMREC.answer);
-  Writeln(F, '</br>');
+   Writeln(F, FTMREC.answer);
   Writeln(F, '</body>');
   Writeln(F, '<head>');
 
   Closefile(F);
-  WEB.Navigate(extractfilepath(application.exename) + 'tmp.htm');
+  WEB.Navigate(extractfilepath(application.exename) + 'tmpB.htm');
 end;
 
 end.

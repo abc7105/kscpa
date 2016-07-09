@@ -8,11 +8,11 @@ uses utm, SysUtils, Classes, forms, DB, ADODB, mshtml, SHDocVw, StdCtrls,
 type
   TMLIST = class
   private
-
     ATM: tm;
     id: integer;
     orderID: LongInt;
     QRYLIST: TADOQUERY;
+
     QRYTMP: TADOQUERY;
     WEBMEMO: TWebBrowser;
     answerWEB: TWEBBROWSER;
@@ -28,6 +28,7 @@ type
     procedure CURRENT();
     constructor CREATE(CON: TADOCONNECTION);
     procedure GETLISTfrom_zj(kmid, zjid: string);
+
 
   published
     property TWEBMEMO: TWebBrowser write SETWEBMEMO;
@@ -47,6 +48,9 @@ begin
 
   QRYTMP := TADOQUERY.CREATE(nil);
   QRYTMP.Connection := CON;
+
+  // QRY_ZJ
+
 
   //  GETLIST;
   atm := tm.create(qrytmp);
@@ -94,6 +98,8 @@ begin
   //showmessage(inttostr(qrylist.recordcount))
 
 end;
+
+
 
 procedure TMLIST.LAST;
 begin
