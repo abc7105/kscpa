@@ -747,6 +747,11 @@ begin
   import_table.Close;
   import_table.Open;
 
+  qrytmp.Close;
+  qrytmp.sql.clear;
+  qrytmp.SQL.Add('delete from tm where sxh=1');
+  qrytmp.ExecSQL;
+
   ShowMessage('已输入数据' + inttostr(import_table.RecordCount));
 
 end;
@@ -958,7 +963,8 @@ end;
 procedure tdotm.tmsavetotmts;
 begin
   try
-
+    if not FileExists(atm.filename) then
+      exit;
     qrytmp.close;
     qrytmp.SQL.Clear;
     qrytmp.SQL.Add('select max(ts) as tmtsid from tmts');
@@ -974,10 +980,11 @@ begin
     qrytmp.SQL.Add('insert into tmts(ID,name,km,zjid,filename,sj)');
     qrytmp.SQL.Add('values(:id,:name,:km,:zjid,:filename,:sj)'); //  :id,
     qrytmp.Parameters.ParamByName('id').Value := atm.tmtsid;
-    qrytmp.Parameters.ParamByName('name').Value := 'testname';
+    qrytmp.Parameters.ParamByName('name').Value := atm.filename;
     qrytmp.Parameters.ParamByName('km').Value := atm.km; //edtkm.atext;
     qrytmp.Parameters.ParamByName('zjid').Value := atm.zj; //edtzj.atfext;
-    qrytmp.Parameters.ParamByName('filename').Value := atm.tsname; // atm.filename;
+    qrytmp.Parameters.ParamByName('filename').Value := atm.tsname;
+    // atm.filename;
     qrytmp.Parameters.ParamByName('sj').Value := now; //edtzj.atext;
     qrytmp.ExecSQL;
 
@@ -1275,7 +1282,7 @@ begin
           if pos1 > 0 then
             result := StrToInt(Copy(Trim(strx), 3, pos1 - 3));
         except
-  //        ShowMessage(strx);
+          //        ShowMessage(strx);
           exit;
         end;
       end;
@@ -1381,7 +1388,6 @@ begin
       EXIT;
     textlines.Clear;
     AssignFile(txt, afile);
-//    SHOWMESSAGE('AFILE' + AFILE);
     Reset(txt);
     stext := '';
     while not Eof(txt) do
@@ -1435,7 +1441,6 @@ begin
     CloseFile(txt);
   except
   end;
-
 end;
 
 procedure tdotm.WriteToTestBEGIN;
@@ -1480,7 +1485,6 @@ begin
         sqltext := 'insert into km(id,name) values(''' + strkm[1] + ''',''' +
           strkm[2] + ''')';
         execsql(sqltext);
-
       end;
     end;
     CloseFile(txt);
@@ -1581,6 +1585,7 @@ var
   I: Integer;
   S: string;
   txt: TextFile;
+  ipos: Integer;
 begin
   try
     if not FileExists(kmzj_code.filename) then
@@ -1600,8 +1605,9 @@ begin
     end;
     CloseFile(txt);
 
+    ipos := Pos('】', fB[0]);
     fB[0] := '【【' + akmzj_code.tmname + '#' + akmzj_code.KM + '#'
-      + akmzj_code.zj + '】】' + fB[0];
+      + akmzj_code.zj + '】】' + copy(fB[0], ipos + 1, Length(FB[0]));
 
     fB.SaveToFile(kmzj_code.filename);
     FB.FREE;
