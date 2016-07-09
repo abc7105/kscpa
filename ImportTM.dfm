@@ -1,6 +1,6 @@
 object fmImportTM: TfmImportTM
-  Left = 113
-  Top = 153
+  Left = 217
+  Top = 555
   Width = 1059
   Height = 558
   Caption = 'fmImportTM'

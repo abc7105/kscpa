@@ -73,7 +73,6 @@ type
     procedure openmdb();
     procedure cleartm();
     procedure From_ONE_HTMLFILE(htmfile: string);
-
     function MAINPATH: string;
     procedure CreateTable();
     procedure CloseTable();
@@ -771,9 +770,9 @@ begin
   tmcon.BeginTrans;
 
   acode := textfile_km_zj_code.create;
-  acode.FILENAME := htmfile;
+  acode.AFILENAME := htmfile;
 
-  atm.title := acode.akmzj_code.tmname;
+  atm.tsname := acode.akmzj_code.tmname;
   atm.km := acode.akmzj_code.KM;
   atm.zj := acode.akmzj_code.zj;
 
@@ -976,9 +975,9 @@ begin
     qrytmp.SQL.Add('values(:id,:name,:km,:zjid,:filename,:sj)'); //  :id,
     qrytmp.Parameters.ParamByName('id').Value := atm.tmtsid;
     qrytmp.Parameters.ParamByName('name').Value := 'testname';
-    qrytmp.Parameters.ParamByName('km').Value := '1'; //edtkm.atext;
-    qrytmp.Parameters.ParamByName('zjid').Value := '001'; //edtzj.atfext;
-    qrytmp.Parameters.ParamByName('filename').Value := 'XXX'; // atm.filename;
+    qrytmp.Parameters.ParamByName('km').Value := atm.km; //edtkm.atext;
+    qrytmp.Parameters.ParamByName('zjid').Value := atm.zj; //edtzj.atfext;
+    qrytmp.Parameters.ParamByName('filename').Value := atm.tsname; // atm.filename;
     qrytmp.Parameters.ParamByName('sj').Value := now; //edtzj.atext;
     qrytmp.ExecSQL;
 
