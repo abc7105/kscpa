@@ -80,38 +80,56 @@ begin
 end;
 
 procedure TfmImportTM.btn1Click(Sender: TObject);
+var
+  filelist: tstringlist;
+  i: Integer;
+  acode: textfile_km_zj_code;
+  adm: Code_KM_ZJ;
 begin
-  dlgOpen1.InitialDir := mainpath;
-  dlgOpen1.Filter := '*.HTM|*.htm';
-  // ExtractFilePath(Application.ExeName);
+  filelist := TStringList.Create;
 
-  dlgOpen1.Execute;
-  if dlgOpen1.Files.Count > 0 then
+  acode := textfile_km_zj_code.create;
+
+  for i := 1 to ejungrid1.RowCount do
   begin
-    Aimporttm.AFILELIST := dlgOpen1.Files;
+    if ejungrid1.Cells[1, i].Value <> '' then
+    begin
+      filelist.Add(ejungrid1.Cells[1, i].TEXT);
+      adm.FILENAME := ejungrid1.Cells[1, i].TEXT;
+      adm.tmname := ExtractFileName(ejungrid1.Cells[1, i].TEXT);
+      adm.KM := ejungrid1.Cells[2, i].TEXT;
+      adm.zj := ejungrid1.Cells[3, i].TEXT;
+      acode.kmzj_code := adm;
+    end;
   end;
-  //  Aimporttm.AFILELIST.Clear;
-  //  Aimporttm.AFILELIST.Add(ExtractFilePath(Application.ExeName) + 'aaa.htm');
+
+  Aimporttm.AFILELIST := filelist;
   Aimporttm.From_ALL_HTMLFILE;
 end;
 
 procedure TfmImportTM.btn2Click(Sender: TObject);
 var
   i: integer;
+  acode: textfile_km_zj_code;
+  adm: Code_KM_ZJ;
 begin
   dlgOpen1.InitialDir := mainpath;
   dlgOpen1.Filter := '*.HTM|*.htm';
-  // ExtractFilePath(Application.ExeName);
 
   dlgOpen1.Execute;
   EjunGrid1.Clear(true);
   EjunGrid1.RowCount := dlgOpen1.Files.Count + 1;
+  acode := textfile_km_zj_code.create;
 
   for i := 0 to dlgOpen1.Files.Count - 1 do
   begin
     EjunGrid1.Cells[1, i + 1].value := dlgOpen1.Files[i];
+    acode.AFILENAME := dlgOpen1.Files[i];
+    adm := acode.kmzj_code;
+    EjunGrid1.Cells[2, i + 1].value := acode.kmzj_code.ZJ;
+    EjunGrid1.Cells[3, i + 1].value := acode.kmzj_code.km;
   end;
-
+  acode.Free;
 end;
 
 procedure TfmImportTM.EjunDBGrid1DblClick(Sender: TObject);
