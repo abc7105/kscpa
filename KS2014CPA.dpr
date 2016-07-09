@@ -17,7 +17,10 @@ uses
   utm in 'utm.pas',
   UTMLIST in 'UTMLIST.pas',
   KS16 in '..\xyword\KS16.pas' {fmks16},
-  KSFORM in '..\xyword\KSFORM.pas' {fmks};
+  KSFORM in '..\xyword\KSFORM.pas' {fmks},
+  dotm in '..\zktm\dotm.pas',
+  ImportTM in 'ImportTM.pas' {fmImportTM},
+  ucommunit in 'ucommunit.pas';
 
 {$R *.res}
 
@@ -25,5 +28,6 @@ begin
   Application.Initialize;
   Application.CreateForm(Tmydb, mydb);
   Application.CreateForm(Tfmks16, fmks16);
+  Application.CreateForm(TfmImportTM, fmImportTM);
   Application.Run;
 end.
