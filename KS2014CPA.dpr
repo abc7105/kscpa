@@ -18,7 +18,7 @@ uses
   UTMLIST in 'UTMLIST.pas',
   KS16 in '..\xyword\KS16.pas' {fmks16},
   KSFORM in '..\xyword\KSFORM.pas' {fmks},
-  dotm in 'dotm.pas',
+  addtm in 'addtm.pas',
   ImportTM in 'ImportTM.pas' {fmImportTM},
   ucommunit in 'ucommunit.pas';
 

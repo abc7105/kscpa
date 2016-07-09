@@ -5,7 +5,7 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, StdCtrls,
-  dotm, ExtCtrls, ZcGridStyle, ZcCalcExpress, ZcFormulas, ZcDBGrids,
+  addtm, ExtCtrls, ZcGridStyle, ZcCalcExpress, ZcFormulas, ZcDBGrids,
   ZcUniClass, ZJGrid, ZcDataGrid, ZcGridClasses
   ;
 
@@ -37,7 +37,7 @@ type
 
 var
   fmImportTM: TfmImportTM;
-  Aimporttm: tdotm;
+  Aimporttm: taddtm;
 
 implementation
 
@@ -48,7 +48,7 @@ uses
 
 procedure TfmImportTM.FormCreate(Sender: TObject);
 begin
-  Aimporttm := tdotm.create;
+  Aimporttm := taddtm.create;
   EjunDBGrid1.DataSet := Aimporttm.getLISTqry;
   // EjunDBGrid1.Column
   EjunDBGrid1.Columns[1].FieldName := 'name';
@@ -141,4 +141,3 @@ begin
 end;
 
 end.
-
