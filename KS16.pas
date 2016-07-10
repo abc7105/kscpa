@@ -32,7 +32,6 @@ type
     WebBrowser1: TWebBrowser;
     ImageList1: TImageList;
     Button3: TButton;
-    Label6: TLabel;
     Timer1: TTimer;
     pnl_nagi: TPanel;
     ApplicationEvents1: TApplicationEvents;
@@ -79,6 +78,11 @@ type
     btn18: TBitBtn;
     btn19: TBitBtn;
     btn20: TBitBtn;
+    pnl3: TPanel;
+    lblTmCount: TLabel;
+    pnl4: TPanel;
+    pnl2: TPanel;
+    lblTmName: TLabel;
     procedure FormCreate(Sender: TObject);
     procedure opendb;
     procedure zeroform;
@@ -99,11 +103,8 @@ type
     procedure FormDestroy(Sender: TObject);
     procedure hotykey(var msg: TMessage); message WM_HOTKEY;
     function getbj(): integer;
-    procedure Button3Click(Sender: TObject);
     function gethtml(): string;
-    function gettmts: integer;
     function sortans(ABCD: string; ans: string): string;
-    procedure Edit4KeyPress(Sender: TObject; var Key: Char);
     procedure Button12Click(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
 
@@ -116,7 +117,6 @@ type
     procedure RichEdit3KeyPress(Sender: TObject; var Key: Char);
     function GetCaretPosEx: TPoint;
     function calctext(str: string): string;
-    procedure Label3DblClick(Sender: TObject);
     procedure ApplicationEvents1Deactivate(Sender: TObject);
     procedure ApplicationEvents1Activate(Sender: TObject);
     function getkf(str: string): double;
@@ -126,11 +126,8 @@ type
     procedure WebBrowser4DocumentComplete(Sender: TObject;
       const pDisp: IDispatch; var URL: OleVariant);
     procedure CheckParentProc;
-    procedure saveans();
     procedure N9Click(Sender: TObject);
     procedure N10Click(Sender: TObject);
-    procedure N11Click(Sender: TObject);
-    procedure N12Click(Sender: TObject);
     procedure N13Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button14Click(Sender: TObject);
@@ -189,6 +186,8 @@ var
 
 begin
 
+  lblTmCount.Caption := '';
+  lblTmName.Caption := '';
   mainpath := ExtractFilePath(Application.ExeName);
   pnlmain.width := (Screen.width div 2 + 100);
   mydb.CON1.Connected := True;
@@ -272,12 +271,14 @@ begin
   // getver;
   Application.OnMessage := IEMessageHandler;
   beginbz := false;
-  //  webbrowser5.Navigate('http://www.whzysoft.cn/updcpa.asp');
+  // webbrowser1.Navigate('http://lxy7105.web004.host888.net/');
   atmlist.GETLISTfrom_zj((pubkm), (pubzj));
   atmlist.TQuestionWeb := WebBrowser1;
   atmlist.TanswerWEB := WBANSWER;
   atmlist.tshortanswerEdit := EdtAnswer;
   atmlist.tLongAnswerRichEdit := Richeditans;
+  atmlist.lbltmcount := lblTmCount;
+  atmlist.lbltmname := lblTmName;
   atmlist.CURRENT;
 
 end;
@@ -464,8 +465,8 @@ begin
         atmlist.GETLISTfrom_zj(strx, stry);
         atmlist.CURRENT;
 
-        //      label1.Caption := tmenuitem(sender).Parent.Caption + ' >>> ' +
-      //          tmenuitem(sender).Caption;
+        lblTmName.Caption := tmenuitem(sender).Parent.Caption + ' >>> ' +
+          tmenuitem(sender).Caption;
         mysys.tmid := mydb.qrytm.SQL.text;
 
         mysys.km := strx;
@@ -489,18 +490,14 @@ begin
 
       mysys.km := '0';
       mysys.zj := '000';
-      //    mysys.tmtitle := label1.Caption;
-     //     saveParamtoFile(ExtractFilePath(Application.EXEName) + 'kjks.ini');
     end;
   end;
-  { if pos(copy(trim(mydb.qryTm.fieldbyname('TITLE').asstring), 1, 1), '123456789') < 1 then
-     sorttm();
-   }
+
   pubzj := mysys.zj;
   pubkm := mysys.km;
 
   sqlstring := mydb.qrytm.SQL.Text;
-  label6.Caption := sqlstring;
+
 
 end;
 
@@ -509,8 +506,6 @@ begin
   panel2.Caption := '';
   if trim(mysys.tmtitle) = '' then
   begin
-
-    //    label1.Caption := '当前没有选定练习题库';
     richedit1.Clear;
   end;
 end;
@@ -538,7 +533,7 @@ begin
   if mydb.qrytm.Eof then
     exit;
 
-  saveans;
+ // saveans;
   mydb.qrytm.Next;
 end;
 
@@ -969,46 +964,6 @@ begin
       end;
 end; // IEMessageHandler
 
-procedure Tfmks16.Button3Click(Sender: TObject);
-var
-  str: string;
-  aa: integer;
-begin
-  try
-    if mydb.qrytm.Active = false then
-      exit;
-    if mydb.qrytm.RecordCount < 1 then
-      exit;
-
-    mydb.qrytmp.close;
-    mydb.qrytmp.SQL.Clear;
-    mydb.qrytmp.SQL.Add('update tm set title=:title ');
-    mydb.qrytmp.SQL.Add('where id=:id');
-    str := gethtml;
-    str := StringReplace(str, '单选题</br>', '', [rfReplaceAll, rfIgnoreCase]);
-    str := StringReplace(str, '多选题</br>', '', [rfReplaceAll, rfIgnoreCase]);
-    str := StringReplace(str, '判断题</br>', '', [rfReplaceAll, rfIgnoreCase]);
-    str := StringReplace(str, '计算题</br>', '', [rfReplaceAll, rfIgnoreCase]);
-    str := StringReplace(str, '单选题<br>', '', [rfReplaceAll, rfIgnoreCase]);
-    str := StringReplace(str, '多选题<br>', '', [rfReplaceAll, rfIgnoreCase]);
-    str := StringReplace(str, '判断题<br>', '', [rfReplaceAll, rfIgnoreCase]);
-    str := StringReplace(str, '计算题<br>', '', [rfReplaceAll, rfIgnoreCase]);
-    str := StringReplace(str, '单选题<br/>', '', [rfReplaceAll, rfIgnoreCase]);
-    str := StringReplace(str, '多选题<br/>', '', [rfReplaceAll, rfIgnoreCase]);
-    str := StringReplace(str, '判断题<br/>', '', [rfReplaceAll, rfIgnoreCase]);
-    str := StringReplace(str, '计算题<br/>', '', [rfReplaceAll, rfIgnoreCase]);
-    mydb.qrytmp.Parameters.ParamByName('title').Value := str;
-    mydb.qrytmp.Parameters.ParamByName('id').Value :=
-      mydb.qrytm.fieldbyname('id').asinteger;
-    mydb.QRYtmp.ExecSQL;
-  except
-
-  end;
-  aa := mydb.qrytm.fieldbyname('id').asinteger;
-  mydb.qrytm.Requery();
-  mydb.qrytm.Locate('id', aa, []);
-end;
-
 function Tfmks16.gethtml: string;
 var
   doc: Variant;
@@ -1025,25 +980,6 @@ begin
   try
     result := lowercase(copy(str, LEN1, LENGTH(STR) - LEN1 - len2));
   except
-  end;
-end;
-
-function Tfmks16.gettmts: integer;
-begin
-  //
-  result := -1;
-  try
-    mydb.qrytmp.close;
-    mydb.qrytmp.SQL.Clear;
-    mydb.qrytmp.SQL.Add('select tmts from tm ');
-    mydb.qrytmp.SQL.Add('where id=:id');
-    mydb.qrytmp.Parameters.ParamByName('id').Value :=
-      mydb.qrytm.fieldbyname('id').asinteger;
-    mydb.qrytmp.Open;
-    result := mydb.qrytmp.fieldbyname('tmts').AsInteger;
-
-  except
-    result := -1;
   end;
 end;
 
@@ -1071,31 +1007,6 @@ begin
     end
   end;
   result := str + stra;
-end;
-
-procedure Tfmks16.Edit4KeyPress(Sender: TObject; var Key: Char);
-var
-  i, icount: integer;
-begin
-  //  try
-  //    icount := strtoint(edit4.text);
-  //  except
-  //    exit;
-  //  end;
-  //
-  //  if icount > mydb.qrytm.RecordCount then
-  //    exit;
-  //  if key = #13 then
-  //  begin
-  //    mydb.qrytm.DisableControls;
-  //    mydb.qrytm.First;
-  //    for i := 1 to icount - 1 do
-  //    begin
-  //      mydb.qrytm.Next;
-  //    end;
-  //    mydb.qrytmp.EnableControls;
-  //
-  //  end;
 end;
 
 procedure Tfmks16.Button12Click(Sender: TObject);
@@ -1297,34 +1208,6 @@ begin
   finally
     calc.Free;
   end;
-
-end;
-
-procedure Tfmks16.Label3DblClick(Sender: TObject);
-var
-  str: string;
-  aa: integer;
-begin
-  //  try
-  //    if mydb.qrytm.Active = false then
-  //      exit;
-  //    if mydb.qrytm.RecordCount < 1 then
-  //      exit;
-  //
-  //    mydb.qrytmp.close;
-  //    mydb.qrytmp.SQL.Clear;
-  //    mydb.qrytmp.SQL.Add('update tm set xans=:xans ');
-  //    mydb.qrytmp.SQL.Add('where id=:id');
-  //    mydb.qrytmp.Parameters.ParamByName('xans').Value := trim(edit2.text);
-  //    mydb.qrytmp.Parameters.ParamByName('id').Value :=
-  //      mydb.qrytm.fieldbyname('id').asinteger;
-  //    mydb.QRYtmp.ExecSQL;
-  //  except
-  //
-  //  end;
-  //  aa := mydb.qrytm.fieldbyname('id').asinteger;
-  //  mydb.qrytm.Requery();
-  //  mydb.qrytm.Locate('id', aa, []);
 
 end;
 
@@ -1599,40 +1482,6 @@ begin
   end;
 end;
 
-procedure Tfmks16.saveans;
-//
-var
-  str: string;
-  OLDBK: TBOOKMARK;
-begin
-  //  try
-
-  //    if mydb.qrytm.Active = false then
-  //      exit;
-  //    if mydb.qrytm.RecordCount < 1 then
-  //      exit;
-  //
-  //    OLDBK := MYDB.QRYTM.GetBookmark;
-  //
-  // //   str := trim(edit2.Text);
-  //    mydb.qrytmp.close;
-  //    mydb.qrytmp.SQL.Clear;
-  //    mydb.qrytmp.SQL.Add('update tm set xmyans=:xmyans,myans=:myans ');
-  //    mydb.qrytmp.SQL.Add('where id=:id');
-  //    mydb.qrytmp.Parameters.ParamByName('myans').Value := richedit3.text;
-  //    mydb.qrytmp.Parameters.ParamByName('xmyans').Value := str;
-  //    mydb.qrytmp.Parameters.ParamByName('id').Value :=
-  //      mydb.qrytm.fieldbyname('id').asinteger;
-  //    mydb.QRYtmp.ExecSQL;
-  //
-  //    MYDB.qrytm.Requery();
-  //    MYDB.qrytm.GotoBookmark(OLDBK);
-  //  except
-
-   // end;
-
-end;
-
 procedure Tfmks16.N9Click(Sender: TObject);
 begin
   n9.Checked := not n9.Checked;
@@ -1660,67 +1509,6 @@ begin
   mysys.isafterpage := n10.Checked;
   saveParamtoFile(ExtractFilePath(Application.EXEName) + 'kjks.ini');
 
-end;
-
-procedure Tfmks16.N11Click(Sender: TObject);
-
-var
-  strtt: string;
-begin
-  n11.Checked := not n11.Checked;
-  if n11.Checked then
-  begin
-
-    mydb.qrytm.Close;
-    mydb.qrytm.SQL.Clear;
-    strtt := StringReplace(sqlstring, 'order ',
-      'And ((xans<>xmyans) or xmyans is null) order ', [rfReplaceAll,
-      rfIgnoreCase]);
-
-    mydb.qrytm.SQL.Add(strtt);
-    mydb.qrytm.Open;
-
-  end
-  else
-  begin
-
-    mydb.qrytm.Close;
-    mydb.qrytm.SQL.Clear;
-    mydb.qrytm.SQL.Add(sqlstring);
-    mydb.qrytm.Open;
-
-  end;
-end;
-
-procedure Tfmks16.N12Click(Sender: TObject);
-
-var
-  strtt: string;
-
-begin
-  n12.Checked := not n12.Checked;
-  if beginbz then
-    exit;
-  saveParamtoFile(ExtractFilePath(Application.EXEName) + 'kjks.ini');
-  if n12.Checked then
-  begin
-    mydb.qrytm.Close;
-    mydb.qrytm.SQL.Clear;
-    strtt := StringReplace(sqlstring, 'order ', ' and isbz=true order ',
-      [rfReplaceAll, rfIgnoreCase]);
-    mydb.qrytm.SQL.Add(strtt);
-    //    edit1.Text := strtt;
-    mydb.qrytm.Open;
-
-  end
-  else
-  begin
-    mydb.qrytm.Close;
-    mydb.qrytm.SQL.Clear;
-    mydb.qrytm.SQL.Add(sqlstring);
-    mydb.qrytm.Open;
-
-  end;
 end;
 
 procedure Tfmks16.N13Click(Sender: TObject);

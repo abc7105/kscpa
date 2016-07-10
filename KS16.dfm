@@ -1,8 +1,8 @@
 object fmks16: Tfmks16
-  Left = 365
-  Top = 113
-  Width = 1144
-  Height = 816
+  Left = 225
+  Top = 548
+  Width = 1155
+  Height = 811
   Caption = #27880#20876#20250#35745#24072#24378#21270#32451#20064#31995#32479'v2016'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -429,8 +429,8 @@ object fmks16: Tfmks16
   TextHeight = 13
   object StatusBar1: TStatusBar
     Left = 0
-    Top = 729
-    Width = 1128
+    Top = 724
+    Width = 1139
     Height = 29
     Panels = <
       item
@@ -446,21 +446,13 @@ object fmks16: Tfmks16
   object Panel2: TPanel
     Left = 0
     Top = 0
-    Width = 1128
-    Height = 78
+    Width = 1139
+    Height = 82
     Align = alTop
     BevelOuter = bvNone
     Ctl3D = False
     ParentCtl3D = False
     TabOrder = 1
-    object Label6: TLabel
-      Left = 97
-      Top = 50
-      Width = 673
-      Height = 22
-      AutoSize = False
-      Caption = 'Label6'
-    end
     object SpeedButton1: TSpeedButton
       Left = 119
       Top = 117
@@ -527,7 +519,6 @@ object fmks16: Tfmks16
       Height = 22
       Caption = #20445#23384#20462#25913
       TabOrder = 0
-      OnClick = Button3Click
     end
     object Panel6: TPanel
       Left = 733
@@ -572,8 +563,8 @@ object fmks16: Tfmks16
     object tlb1: TToolBar
       Left = 0
       Top = 0
-      Width = 1128
-      Height = 47
+      Width = 1139
+      Height = 45
       ButtonHeight = 38
       ButtonWidth = 94
       Caption = 'tlb1'
@@ -656,30 +647,88 @@ object fmks16: Tfmks16
         ImageIndex = 5
       end
     end
+    object pnl4: TPanel
+      Left = 0
+      Top = 45
+      Width = 1139
+      Height = 49
+      Align = alTop
+      Caption = 'pnl4'
+      TabOrder = 5
+      object pnl2: TPanel
+        Left = 1
+        Top = 1
+        Width = 918
+        Height = 47
+        Align = alClient
+        Caption = 'pnl2'
+        TabOrder = 0
+        object lblTmName: TLabel
+          Left = 1
+          Top = 1
+          Width = 916
+          Height = 45
+          Align = alClient
+          AutoSize = False
+          Caption = 'lblTmName'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clPurple
+          Font.Height = -19
+          Font.Name = 'MS Sans Serif'
+          Font.Style = [fsBold]
+          ParentFont = False
+        end
+      end
+      object pnl3: TPanel
+        Left = 919
+        Top = 1
+        Width = 219
+        Height = 47
+        Align = alRight
+        Caption = 'pnl3'
+        TabOrder = 1
+        object lblTmCount: TLabel
+          Left = 1
+          Top = 1
+          Width = 217
+          Height = 45
+          Align = alClient
+          AutoSize = False
+          Caption = 'Label6'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clPurple
+          Font.Height = -19
+          Font.Name = 'MS Sans Serif'
+          Font.Style = [fsBold]
+          ParentFont = False
+        end
+      end
+    end
   end
   object pnl_nagi: TPanel
     Left = 0
-    Top = 78
+    Top = 82
     Width = 45
-    Height = 651
+    Height = 642
     Align = alLeft
     BevelInner = bvRaised
     BevelOuter = bvSpace
     TabOrder = 2
+    Visible = False
   end
   object pnl1: TPanel
     Left = 45
-    Top = 78
-    Width = 1083
-    Height = 651
+    Top = 82
+    Width = 1094
+    Height = 642
     Align = alClient
     BevelInner = bvLowered
     Caption = 'pnl1'
     TabOrder = 3
     object Splitter1: TSplitter
       Left = 2
-      Top = 335
-      Width = 1079
+      Top = 326
+      Width = 1090
       Height = 16
       Cursor = crVSplit
       Align = alBottom
@@ -687,8 +736,8 @@ object fmks16: Tfmks16
     object pnlmain: TPanel
       Left = 2
       Top = 2
-      Width = 1079
-      Height = 333
+      Width = 1090
+      Height = 324
       Align = alClient
       BevelOuter = bvNone
       Caption = 'pnlmain'
@@ -698,8 +747,8 @@ object fmks16: Tfmks16
       object RichEdit1: TRichEdit
         Left = 0
         Top = 0
-        Width = 1079
-        Height = 333
+        Width = 1090
+        Height = 324
         Align = alClient
         Font.Charset = GB2312_CHARSET
         Font.Color = clWindowText
@@ -717,12 +766,12 @@ object fmks16: Tfmks16
       object WebBrowser1: TWebBrowser
         Left = 0
         Top = 0
-        Width = 1079
-        Height = 333
+        Width = 1090
+        Height = 324
         Align = alClient
         TabOrder = 1
         ControlData = {
-          4C000000856F00006B2200000000000000000000000000000000000000000000
+          4C000000A87000007D2100000000000000000000000000000000000000000000
           000000004C000000000000000000000001000000E0D057007335CF11AE690800
           2B2E126208000000000000004C0000000114020000000000C000000000000046
           8000000000000000000000000000000000000000000000000000000000000000
@@ -731,8 +780,8 @@ object fmks16: Tfmks16
     end
     object pnlAnswer: TPanel
       Left = 2
-      Top = 351
-      Width = 1079
+      Top = 342
+      Width = 1090
       Height = 298
       Align = alBottom
       BevelOuter = bvNone
@@ -751,7 +800,7 @@ object fmks16: Tfmks16
       object pnl_myans: TPanel
         Left = 0
         Top = 0
-        Width = 1079
+        Width = 1090
         Height = 121
         Align = alTop
         Caption = 'pnl_myans'
@@ -759,7 +808,7 @@ object fmks16: Tfmks16
         object RichEditANS: TRichEdit
           Left = 1
           Top = 1
-          Width = 780
+          Width = 791
           Height = 119
           Hint = 
             #27492#26694#20026#20010#20154#31572#39064#26694#65292#24744#21487#22312#36825#37324#22635#20889#33258#24049#30340#25991#23383#31572#26696#25110#20307#20250#65292#31995#32479#20250#33258#21160#20445#23384#65292#24182#19982#39064#30446#21516#27493#12290#13#10#13#10#22312#38750#26174#31034#31572#26696#29366#24577#19979#65292#24744#25353'ctrl+'#22238 +
@@ -780,7 +829,7 @@ object fmks16: Tfmks16
           OnKeyPress = RichEdit3KeyPress
         end
         object pnl_myObjective_questions: TPanel
-          Left = 781
+          Left = 792
           Top = 1
           Width = 297
           Height = 119
@@ -934,12 +983,12 @@ object fmks16: Tfmks16
       object wbANSWER: TWebBrowser
         Left = 0
         Top = 121
-        Width = 1079
+        Width = 1090
         Height = 177
         Align = alClient
         TabOrder = 2
         ControlData = {
-          4C000000856F00004B1200000000000000000000000000000000000000000000
+          4C000000A87000004B1200000000000000000000000000000000000000000000
           000000004C000000000000000000000001000000E0D057007335CF11AE690800
           2B2E126208000000000000004C0000000114020000000000C000000000000046
           8000000000000000000000000000000000000000000000000000000000000000
@@ -984,12 +1033,10 @@ object fmks16: Tfmks16
       object N11: TMenuItem
         Caption = #21482#30475#20570#38169#39064#30446
         Checked = True
-        OnClick = N11Click
       end
       object N12: TMenuItem
         Caption = #21482#30475#26631#35760#37325#28857#39064#30446
         Checked = True
-        OnClick = N12Click
       end
       object N13: TMenuItem
         Caption = #31572#39064#21518#26174#31034#31572#26696

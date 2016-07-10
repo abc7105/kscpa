@@ -29,6 +29,8 @@ type
     rowcount: LongInt;
     LongAnswerRichEdit: trichedit;
     SHORTTM: array of RECshorttm;
+    flbltmcount: TLabel;
+    flbltmname: TLabel;
     procedure setAnsWeb(const Value: TWEBBROWSER);
     procedure SETQuestionWeb(VALUE: TWebBrowser);
     procedure setAnsEdit(const Value: tedit);
@@ -36,6 +38,8 @@ type
     procedure SETMyshortans(const Value: string);
     procedure SETisimportant(const Value: boolean);
     procedure setLONGAnsRichEdit(const Value: tRICHedit);
+    procedure setlbltmcount(const Value: TLabel);
+    procedure setlbltmname(const Value: TLabel);
   public
     procedure NEXT();
     procedure PRIOR();
@@ -56,6 +60,8 @@ type
     property tanswerWEB: TWEBBROWSER write setAnsWeb;
     property tshortanswerEdit: tedit write setAnsEdit;
     property tLongAnswerRichEdit: tRICHedit write setLONGAnsRichEdit;
+    property lbltmname: TLabel write setlbltmname;
+    property lbltmcount: TLabel write setlbltmcount;
   end;
 
 implementation
@@ -95,6 +101,8 @@ begin
   ATM.ANStoWEB(answerWEB);
   ATM.ShortAnswerToedit(shortanswerEdit);
   ATM.LongAnsToRichedit(LongAnswerRichEdit);
+  Flbltmcount.caption := ' 第 ' + trim(IntToStr(QRYLIST.RecNo)) + '题 /  总' +
+    trim(IntToStr(QRYLIST.RecordCount)) + ' 题';
 
 end;
 
@@ -186,6 +194,7 @@ begin
   CurrentTMREC.isimportant := Value;
   ATM.aWholeTmRec := CurrentTMREC;
   ATM.Update_Isimportant;
+  ATM.titletoWEB(QuestionWeb);
 end;
 
 procedure TMLIST.SETMyLongAns(const Value: string);
@@ -213,6 +222,16 @@ procedure TMLIST.setLONGAnsRichEdit(const Value: tRICHedit);
 begin
   LongAnswerRichEdit := Value;
 
+end;
+
+procedure TMLIST.setlbltmcount(const Value: TLabel);
+begin
+  flbltmcount := value;
+end;
+
+procedure TMLIST.setlbltmname(const Value: TLabel);
+begin
+  flbltmname := value;
 end;
 
 end.

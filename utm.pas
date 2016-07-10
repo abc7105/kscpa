@@ -143,10 +143,8 @@ begin
   Writeln(F, '	line-height: 25px;');
   Writeln(F, '      	margin:0px;');
   Writeln(F, 'padding:6px;');
-  if fWholeTmRec.isimportant then
-    Writeln(F, '	background-color: #f09450;')
-  else
-    Writeln(F, '	background-color: #ffffff;');
+
+  Writeln(F, '	background-color: #ffffff;');
   Writeln(F, '	text-align: left; ');
   Writeln(F, '	color: #000000;');
   Writeln(F, '}               ');
@@ -156,15 +154,24 @@ begin
   Writeln(F, '	line-height: 22px;');
   Writeln(F, '      	margin:0px;');
   Writeln(F, 'padding:0px;');
-  if fWholeTmRec.isimportant then
-    Writeln(F, '	background-color: #f09450;')
-  else
-    Writeln(F, '	background-color: #ffffff;');
+  Writeln(F, '}               ');
+  Writeln(F, '.p2{');
+  Writeln(F, '	font-family: "宋体";');
+  Writeln(F, '	font-size: 16px;');
+  Writeln(F, '	line-height: 22px;');
+  Writeln(F, '      	margin:0px;');
+  Writeln(F, 'padding:0px;');
+  Writeln(F, '	background-color: #ff0000;');
+  Writeln(F, '}               ');
+
   Writeln(F, '}               ');
   Writeln(F, '-->          ');
   Writeln(F, '</style>  ');
   Writeln(F, '</head>');
   Writeln(F, '<body class="main">  ');
+  //==
+  if fWholeTmRec.isimportant then
+    Writeln(F, '<span class="p2">【重点】 </span>');
   Writeln(F, tmtype_chinese);
   Writeln(F, FWholeTmRec.TITLE);
 
@@ -173,6 +180,7 @@ begin
 
   Closefile(F); {关闭文件 F}
   WEB.Navigate(extractfilepath(application.exename) + 'tmp.htm');
+
 end;
 
 function OpenOneTM.TMTYPE: INTEGER;
@@ -221,12 +229,14 @@ begin
   Writeln(F, 'padding:0px;');
   Writeln(F, '	background-color: #ffffff;');
   Writeln(F, '}               ');
+
   Writeln(F, '-->          ');
   Writeln(F, '</style>  ');
   Writeln(F, '</head>');
   Writeln(F, '<body class="main">  ');
-  //==
+
   Writeln(F, tmtype_chinese);
+
   Writeln(F, FWholeTmRec.answer);
   Writeln(F, '</body>');
   Writeln(F, '<head>');
@@ -276,13 +286,13 @@ function OpenOneTM.tmtype_chinese: string;
 begin
   //
   if FWholeTmRec.TMTYPE = TMTYPE_judgment then
-    result := '判断题）'
+    result := '判断题'
   else if FWholeTmRec.TMTYPE = TMTYPE_ONESELECT then
-    result := '单选题）'
+    result := '单选题'
   else if FWholeTmRec.TMTYPE = TMTYPE_MULTISELECT then
-    result := '多选题）'
+    result := '多选题'
   else
-    result := '主观题）';
+    result := '主观题';
 
 end;
 
@@ -292,6 +302,8 @@ begin
   edt.Clear;
   edt.Lines.Add(fWholeTmRec.myanswer);
 end;
+
+
 
 end.
 
