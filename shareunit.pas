@@ -14,7 +14,6 @@ type
     isafterdy: boolean;
     km: string;
     zj: string;
-
     pwd: string;
 
   end;

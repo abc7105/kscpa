@@ -26,8 +26,8 @@ uses
 
 begin
   Application.Initialize;
+  Application.Title := '×¢»á¿¼ÊÔÏµÍ³';
   Application.CreateForm(Tmydb, mydb);
   Application.CreateForm(Tfmks16, fmks16);
-  Application.CreateForm(TfmImportTM, fmImportTM);
   Application.Run;
 end.

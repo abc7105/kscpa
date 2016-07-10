@@ -1,8 +1,8 @@
 object mydb: Tmydb
   OldCreateOrder = False
   OnCreate = DataModuleCreate
-  Left = 334
-  Top = 5
+  Left = 145
+  Top = 49
   Height = 723
   Width = 1032
   object DSTM: TDataSource

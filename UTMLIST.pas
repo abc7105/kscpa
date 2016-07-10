@@ -12,13 +12,12 @@ type
     id: integer;
     orderID: LongInt;
     QRYLIST: TADOQUERY;
-
     QRYTMP: TADOQUERY;
-    WEBMEMO: TWebBrowser;
+    QuestionWeb: TWebBrowser;
     answerWEB: TWEBBROWSER;
     answerlbl: TLabel;
     procedure SETansEdit(const Value: TWEBBROWSER);
-    procedure SETWEBMEMO(VALUE: TWebBrowser);
+    procedure SETQuestionWeb(VALUE: TWebBrowser);
     procedure SETanslabel(const Value: TLabel);
   public
     procedure NEXT();
@@ -28,10 +27,8 @@ type
     procedure CURRENT();
     constructor CREATE(CON: TADOCONNECTION);
     procedure GETLISTfrom_zj(kmid, zjid: string);
-
-
   published
-    property TWEBMEMO: TWebBrowser write SETWEBMEMO;
+    property TQuestionWeb: TWebBrowser write SETQuestionWeb;
     property tanswerWEB: TWEBBROWSER write SETansEdit;
     property tanswerlbl: TLabel write SETanslabel;
   end;
@@ -49,10 +46,6 @@ begin
   QRYTMP := TADOQUERY.CREATE(nil);
   QRYTMP.Connection := CON;
 
-  // QRY_ZJ
-
-
-  //  GETLIST;
   atm := tm.create(qrytmp);
 
   if qrylist.Active then
@@ -70,7 +63,10 @@ begin
   if QRYLIST.RecordCount < 1 then
     exit;
   ATM.ID := QRYLIST.FIELDBYNAME('ID').AsInteger;
-  ATM.titletoWEB(WEBMEMO);
+  
+  ATM.titletoWEB(QuestionWeb);
+  ATM.ANStoWEB(answerWEB);
+  ATM.ShortAnswerToLABEL(answerlbl);
 end;
 
 procedure TMLIST.FIRST;
@@ -80,7 +76,7 @@ begin
 
   QRYLIST.First;
   ATM.ID := QRYLIST.FIELDBYNAME('ID').AsInteger;
-  ATM.titletoWEB(WEBMEMO);
+  ATM.titletoWEB(QuestionWeb);
   ATM.ANStoWEB(answerWEB);
   ATM.ShortAnswerToLABEL(answerlbl);
 
@@ -95,11 +91,7 @@ begin
   qrylist.Parameters.ParamByName('kmid').Value := kmid;
   qrylist.Parameters.ParamByName('zjid').Value := zjid;
   QRYLIST.Open;
-  //showmessage(inttostr(qrylist.recordcount))
-
 end;
-
-
 
 procedure TMLIST.LAST;
 begin
@@ -107,7 +99,7 @@ begin
     exit;
   QRYLIST.LAST;
   ATM.ID := QRYLIST.FIELDBYNAME('ID').AsInteger;
-  ATM.titletoWEB(WEBMEMO);
+  ATM.titletoWEB(QuestionWeb);
   ATM.ANStoWEB(answerWEB);
   ATM.ShortAnswerToLABEL(answerlbl);
 
@@ -122,7 +114,7 @@ begin
   begin
     QRYLIST.NEXT;
     ATM.ID := QRYLIST.FIELDBYNAME('ID').AsInteger;
-    ATM.titletoWEB(WEBMEMO);
+    ATM.titletoWEB(QuestionWeb);
     ATM.ANStoWEB(answerWEB);
     ATM.ShortAnswerToLABEL(answerlbl);
   end;
@@ -138,7 +130,7 @@ begin
   begin
     QRYLIST.Prior;
     ATM.ID := QRYLIST.FIELDBYNAME('ID').AsInteger;
-    ATM.titletoWEB(WEBMEMO);
+    ATM.titletoWEB(QuestionWeb);
     ATM.ANStoWEB(answerWEB);
     ATM.ShortAnswerToLABEL(answerlbl);
   end;
@@ -154,11 +146,10 @@ begin
   answerlbl := Value;
 end;
 
-procedure TMLIST.SETWEBMEMO(VALUE: TWebBrowser);
+procedure TMLIST.SETQuestionWeb(VALUE: TWebBrowser);
 begin
   //
-  WEBMEMO := VALUE;
+  QuestionWeb := VALUE;
 end;
 
 end.
-

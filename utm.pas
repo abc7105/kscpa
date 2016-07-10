@@ -20,7 +20,6 @@ type
     ftmrec: tmrec;
     fID: Integer;
     qrytmp: TADOQuery;
-    fdispanswer: Boolean;
     function GETtmrec: tmrec;
     function GETID: INTEGER;
     procedure queryid(id: Integer);
@@ -28,9 +27,8 @@ type
   published
     property atmrec: tmrec read GETtmrec;
     property ID: INTEGER read GETID write SETID;
-    property dispanswer: Boolean read fdispanswer write fdispanswer;
-    procedure CLEAR;
 
+    procedure CLEAR;
   public
     constructor create(qrycx: tadoquery);
     procedure titletoWEB(WEB: TWEBBROWSER);
@@ -64,8 +62,6 @@ constructor tm.create(qrycx: tadoquery);
 begin
   //
   qrytmp := qrycx;
-  fdispanswer := True;
-
 end;
 
 function tm.GETID: INTEGER;
@@ -132,17 +128,17 @@ begin
   Writeln(F, '<!--');
   Writeln(F, '.main {');
   Writeln(F, '	font-family: "宋体";'); //         楷体_GB2312
-  Writeln(F, '	font-size: 20px;');
+  Writeln(F, '	font-size: 16px;');
   Writeln(F, '	line-height: 25px;');
   Writeln(F, '      	margin:0px;');
-  Writeln(F, 'padding:0px;');
+  Writeln(F, 'padding:6px;');
   Writeln(F, '	background-color: #ffffff;');
   Writeln(F, '	text-align: left; ');
   Writeln(F, '	color: #000000;');
   Writeln(F, '}               ');
   Writeln(F, '.main p{');
   Writeln(F, '	font-family: "宋体";');
-  Writeln(F, '	font-size: 20px;');
+  Writeln(F, '	font-size: 16px;');
   Writeln(F, '	line-height: 22px;');
   Writeln(F, '      	margin:0px;');
   Writeln(F, 'padding:0px;');
@@ -203,17 +199,17 @@ begin
   Writeln(F, '<!--');
   Writeln(F, '.main {');
   Writeln(F, '	font-family: "宋体";'); //         楷体_GB2312
-  Writeln(F, '	font-size: 20px;');
+  Writeln(F, '	font-size: 16px;');
   Writeln(F, '	line-height: 25px;');
   Writeln(F, '      	margin:0px;');
-  Writeln(F, 'padding:0px;');
+  Writeln(F, 'padding:6px;');
   Writeln(F, '	background-color: #ffffff;');
   Writeln(F, '	text-align: left; ');
   Writeln(F, '	color: #000000;');
   Writeln(F, '}               ');
   Writeln(F, '.main p{');
   Writeln(F, '	font-family: "宋体";');
-  Writeln(F, '	font-size: 20px;');
+  Writeln(F, '	font-size: 16px;');
   Writeln(F, '	line-height: 22px;');
   Writeln(F, '      	margin:0px;');
   Writeln(F, 'padding:0px;');
@@ -234,4 +230,3 @@ begin
 end;
 
 end.
-
