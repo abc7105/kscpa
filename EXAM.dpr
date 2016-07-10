@@ -16,7 +16,7 @@ uses
   lxyjm in 'lxyjm.pas',
   utm in 'utm.pas',
   UTMLIST in 'UTMLIST.pas',
-  KS16 in '..\xyword\KS16.pas' {fmks16},
+  KS16 in 'KS16.pas' {fmks16},
   KSFORM in '..\xyword\KSFORM.pas' {fmks},
   addtm in 'addtm.pas',
   ImportTM in 'ImportTM.pas' {fmImportTM},
