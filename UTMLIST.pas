@@ -6,6 +6,15 @@ uses utm, SysUtils, Classes, forms, DB, ADODB, mshtml, SHDocVw, StdCtrls,
   Dialogs;
 
 type
+  RECshorttm = record
+    id: longint;
+    xans: string;
+    xmyans: string;
+    iserror: Boolean;
+    istb: Boolean; //÷ÿµ„;
+  end;
+
+type
   TMLIST = class
   private
     ATM: tm;
@@ -16,6 +25,8 @@ type
     QuestionWeb: TWebBrowser;
     answerWEB: TWEBBROWSER;
     answerlbl: TLabel;
+    rowcount: LongInt;
+    SHORTTM: array of RECshorttm;
     procedure SETansEdit(const Value: TWEBBROWSER);
     procedure SETQuestionWeb(VALUE: TWebBrowser);
     procedure SETanslabel(const Value: TLabel);
@@ -27,6 +38,7 @@ type
     procedure CURRENT();
     constructor CREATE(CON: TADOCONNECTION);
     procedure GETLISTfrom_zj(kmid, zjid: string);
+    procedure GetShorttm();
   published
     property TQuestionWeb: TWebBrowser write SETQuestionWeb;
     property tanswerWEB: TWEBBROWSER write SETansEdit;
@@ -63,10 +75,11 @@ begin
   if QRYLIST.RecordCount < 1 then
     exit;
   ATM.ID := QRYLIST.FIELDBYNAME('ID').AsInteger;
-  
+
   ATM.titletoWEB(QuestionWeb);
   ATM.ANStoWEB(answerWEB);
   ATM.ShortAnswerToLABEL(answerlbl);
+  rowcount := 0;
 end;
 
 procedure TMLIST.FIRST;
@@ -91,6 +104,24 @@ begin
   qrylist.Parameters.ParamByName('kmid').Value := kmid;
   qrylist.Parameters.ParamByName('zjid').Value := zjid;
   QRYLIST.Open;
+  rowcount := QRYLIST.RecordCount;
+
+end;
+
+procedure TMLIST.GetShorttm;
+var
+  i: integer;
+begin
+  //
+  SetLength(SHORTTM, rowcount);
+  for i := 1 to rowcount do
+  begin
+    SHORTTM[i - 1].id := QRYLIST.fieldbyname('id').AsInteger;
+    SHORTTM[i - 1].xans := QRYLIST.fieldbyname('xans').asstring;
+    SHORTTM[i - 1].xmyans := QRYLIST.fieldbyname('xmyans').asstring;
+    SHORTTM[i - 1].iserror := QRYLIST.fieldbyname('iserror').AsBoolean;
+    SHORTTM[i - 1].istb := QRYLIST.fieldbyname('istb').AsBoolean;
+  end;
 end;
 
 procedure TMLIST.LAST;
@@ -153,3 +184,4 @@ begin
 end;
 
 end.
+

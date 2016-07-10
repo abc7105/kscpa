@@ -6,7 +6,7 @@ uses SysUtils, Classes, forms, DB, ADODB, mshtml, SHDocVw, StdCtrls, ComCtrls;
 
 type
   tmrec = record
-    id: integer;
+    id: longint;
     title: string;
     answer: string;
     shortanswer: string;
@@ -221,7 +221,7 @@ begin
   Writeln(F, '<body class="main">  ');
   //==
   Writeln(F, TMTYPE);
-   Writeln(F, FTMREC.answer);
+  Writeln(F, FTMREC.answer);
   Writeln(F, '</body>');
   Writeln(F, '<head>');
 
@@ -230,3 +230,4 @@ begin
 end;
 
 end.
+

@@ -1,6 +1,6 @@
 object fmxg: Tfmxg
-  Left = 289
-  Top = 80
+  Left = 177
+  Top = 93
   Width = 881
   Height = 645
   Caption = #35797#39064#24211#20462#25913

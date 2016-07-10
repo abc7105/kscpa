@@ -1,6 +1,6 @@
 object fmselectRND: TfmselectRND
-  Left = 308
-  Top = 262
+  Left = 514
+  Top = 205
   Width = 591
   Height = 359
   Caption = #38543#26426#25277#39064
@@ -122,7 +122,6 @@ object fmselectRND: TfmselectRND
     Width = 313
     Height = 161
     DataSource = DataSource1
-    Flat = False
     FooterColor = clWindow
     FooterFont.Charset = DEFAULT_CHARSET
     FooterFont.Color = clWindowText
