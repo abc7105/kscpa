@@ -4,39 +4,50 @@ interface
 
 uses SysUtils, Classes, forms, DB, ADODB, mshtml, SHDocVw, StdCtrls, ComCtrls;
 
+const
+  TMTYPE_ONESELECT = 1;
+  TMTYPE_MULTISELECT = 2;
+  TMTYPE_judgment = 3;
+  TMTYPE_OTHER = 4;
+
 type
-  tmrec = record
+  WholeTmRec = record
     id: longint;
     title: string;
     answer: string;
     shortanswer: string;
+    myshortanswer: string;
     myanswer: string;
     ISerr: Boolean;
     isimportant: Boolean;
+    TMTYPE: Integer;
   end;
 
-  tm = class
+  OpenOneTM = class
   private
-    ftmrec: tmrec;
+    fWholeTmRec: WholeTmRec;
     fID: Integer;
     qrytmp: TADOQuery;
-    function GETtmrec: tmrec;
     function GETID: INTEGER;
     procedure queryid(id: Integer);
     procedure SETID(const Value: INTEGER);
-  published
-    property atmrec: tmrec read GETtmrec;
-    property ID: INTEGER read GETID write SETID;
+    procedure setWholeTmRec(const Value: WholeTmRec);
 
+  published
+    property aWholeTmRec: WholeTmRec read fWholeTmRec write setWholeTmRec;
+    property ID: INTEGER read GETID write SETID;
     procedure CLEAR;
   public
     constructor create(qrycx: tadoquery);
     procedure titletoWEB(WEB: TWEBBROWSER);
     procedure ANStoWEB(WEB: TWEBBROWSER);
-    //     procedure ANSWERtoWEB(WEB: TWEBBROWSER);
-    procedure ShortAnswerToLABEL(LBL: TLABEL);
-    function TMTYPE(): string;
-
+    procedure ShortAnswerToedit(edt: Tedit);
+    procedure LongAnsToRichedit(edt: Trichedit);
+    procedure Update_MyShortAnswer();
+    procedure Update_Mylonganswer;
+    procedure Update_Isimportant();
+    function TMTYPE(): INTEGER;
+    function tmtype_chinese: string;
   end;
 
 implementation
@@ -46,31 +57,33 @@ uses
 
 { tm }
 
-procedure tm.CLEAR;
+procedure OpenOneTM.CLEAR;
 begin
   //
-  ftmrec.id := 0;
-  ftmrec.title := '';
-  ftmrec.answer := '';
-  ftmrec.shortanswer := '';
-  ftmrec.myanswer := '';
-  ftmrec.ISerr := FALSE;
-  ftmrec.isimportant := False;
+  fWholeTmRec.id := 0;
+  fWholeTmRec.title := '';
+  fWholeTmRec.answer := '';
+  fWholeTmRec.shortanswer := '';
+  fWholeTmRec.myanswer := '';
+  fWholeTmRec.myshortanswer := '';
+  fWholeTmRec.ISerr := FALSE;
+  fWholeTmRec.isimportant := False;
+  fWholeTmRec.TMTYPE := 4;
 end;
 
-constructor tm.create(qrycx: tadoquery);
+constructor OpenOneTM.create(qrycx: tadoquery);
 begin
   //
   qrytmp := qrycx;
 end;
 
-function tm.GETID: INTEGER;
+function OpenOneTM.GETID: INTEGER;
 begin
   //
   result := FID;
 end;
 
-procedure tm.queryid(id: Integer);
+procedure OpenOneTM.queryid(id: Integer);
 begin
   //
   qrytmp.close;
@@ -81,38 +94,36 @@ begin
 
   if qrytmp.RecordCount > 0 then
   begin
-
-    ftmrec.title := qrytmp.fieldbyname('title').asstring;
-    ftmrec.answer := qrytmp.fieldbyname('ans').asstring;
-    ftmrec.shortanswer := qrytmp.fieldbyname('xans').asstring;
+    fWholeTmRec.id := id;
+    fWholeTmRec.title := qrytmp.fieldbyname('title').asstring;
+    fWholeTmRec.answer := qrytmp.fieldbyname('ans').asstring;
+    fWholeTmRec.shortanswer := qrytmp.fieldbyname('xans').asstring;
+    fWholeTmRec.myanswer := qrytmp.fieldbyname('myans').asstring;
+    fWholeTmRec.myshortanswer := qrytmp.fieldbyname('xmyans').asstring;
+    fWholeTmRec.ISerr := qrytmp.fieldbyname('iserr').asboolean;
+    fWholeTmRec.isimportant := qrytmp.fieldbyname('istb').asboolean;
+    fWholeTmRec.TMTYPE := TMTYPE;
   end
   else
   begin
     CLEAR;
-
   end;
 
 end;
 
-function tm.GETtmrec: tmrec;
-begin
-  //
-  result := ftmrec;
-end;
-
-procedure tm.SETID(const Value: INTEGER);
+procedure OpenOneTM.SETID(const Value: INTEGER);
 begin
   //
   fid := Value;
   queryid(fID);
 end;
 
-procedure tm.ShortAnswerToLABEL(LBL: TLABEL);
+procedure OpenOneTM.ShortAnswerToedit(edt: Tedit);
 begin
-  LBL.Caption := ftmrec.shortanswer;
+  edt.text := fWholeTmRec.myshortanswer;
 end;
 
-procedure tm.titletoWEB(WEB: TWEBBROWSER);
+procedure OpenOneTM.titletoWEB(WEB: TWEBBROWSER);
 var
   f: Textfile;
 begin
@@ -132,7 +143,10 @@ begin
   Writeln(F, '	line-height: 25px;');
   Writeln(F, '      	margin:0px;');
   Writeln(F, 'padding:6px;');
-  Writeln(F, '	background-color: #ffffff;');
+  if fWholeTmRec.isimportant then
+    Writeln(F, '	background-color: #f09450;')
+  else
+    Writeln(F, '	background-color: #ffffff;');
   Writeln(F, '	text-align: left; ');
   Writeln(F, '	color: #000000;');
   Writeln(F, '}               ');
@@ -142,22 +156,17 @@ begin
   Writeln(F, '	line-height: 22px;');
   Writeln(F, '      	margin:0px;');
   Writeln(F, 'padding:0px;');
-  Writeln(F, '	background-color: #ffffff;');
+  if fWholeTmRec.isimportant then
+    Writeln(F, '	background-color: #f09450;')
+  else
+    Writeln(F, '	background-color: #ffffff;');
   Writeln(F, '}               ');
   Writeln(F, '-->          ');
   Writeln(F, '</style>  ');
   Writeln(F, '</head>');
   Writeln(F, '<body class="main">  ');
-  //==
-  Writeln(F, TMTYPE);
-  Writeln(F, FTMREC.TITLE);
-  //  if fdispanswer then
-  //  begin
-  //    Writeln(F, '=======================答案=======================');
-  //    Writeln(F, '</br>');
-  //    Writeln(F, FTMREC.answer);
-  //  end;
-    //===
+  Writeln(F, tmtype_chinese);
+  Writeln(F, FWholeTmRec.TITLE);
 
   Writeln(F, '</body>');
   Writeln(F, '<head>');
@@ -166,24 +175,21 @@ begin
   WEB.Navigate(extractfilepath(application.exename) + 'tmp.htm');
 end;
 
-function tm.TMTYPE: string;
+function OpenOneTM.TMTYPE: INTEGER;
 begin
   //
-  RESULT := '';
-  if length(trim(ftmrec.SHORTANSWER)) < 1 then
-    RESULT := ''
-  else if (trim(ftmrec.SHORTANSWER) = '√') or
-    (trim(ftmrec.SHORTANSWER) = '×') then
-    RESULT := '判断题'
-  else if length(trim(ftmrec.SHORTANSWER)) = 1 then
-    RESULT := '单选题'
-  else if length(trim(ftmrec.SHORTANSWER)) > 1 then
-    RESULT := '多选题'
-  else if length(trim(ftmrec.SHORTANSWER)) < 1 then
-    RESULT := '计算综合题';
+  RESULT := 4;
+  if Pos(trim(fWholeTmRec.SHORTANSWER), '×√×') > 0 then
+    RESULT := TMTYPE_judgment
+  else if length(trim(fWholeTmRec.SHORTANSWER)) = 1 then
+    RESULT := TMTYPE_ONESELECT
+  else if length(trim(fWholeTmRec.SHORTANSWER)) > 1 then
+    RESULT := TMTYPE_MULTISELECT
+  else
+    RESULT := TMTYPE_OTHER;
 end;
 
-procedure tm.ANStoWEB(WEB: TWEBBROWSER);
+procedure OpenOneTM.ANStoWEB(WEB: TWEBBROWSER);
 var
   f: Textfile;
 begin
@@ -220,13 +226,71 @@ begin
   Writeln(F, '</head>');
   Writeln(F, '<body class="main">  ');
   //==
-  Writeln(F, TMTYPE);
-  Writeln(F, FTMREC.answer);
+  Writeln(F, tmtype_chinese);
+  Writeln(F, FWholeTmRec.answer);
   Writeln(F, '</body>');
   Writeln(F, '<head>');
 
   Closefile(F);
   WEB.Navigate(extractfilepath(application.exename) + 'tmpB.htm');
+end;
+
+procedure OpenOneTM.Update_Isimportant;
+begin
+  //
+  qrytmp.close;
+  qrytmp.sql.Clear;
+  qrytmp.SQL.Add('update tm set istb=:istb where id=:id');
+  qrytmp.Parameters.ParamByName('id').Value := aWholeTmRec.id;
+  qrytmp.Parameters.ParamByName('istb').Value := aWholeTmRec.isimportant;
+  qrytmp.ExecSQL;
+end;
+
+procedure OpenOneTM.Update_MyShortAnswer;
+begin
+  qrytmp.close;
+  qrytmp.sql.Clear;
+  qrytmp.SQL.Add('update tm set xmyans=:xmyans,iserr=:iserr where id=:id');
+  qrytmp.Parameters.ParamByName('id').Value := aWholeTmRec.id;
+  qrytmp.Parameters.ParamByName('iserr').Value := aWholeTmRec.ISerr;
+  qrytmp.Parameters.ParamByName('xmyans').Value := aWholeTmRec.myshortanswer;
+  qrytmp.ExecSQL;
+end;
+
+procedure OpenOneTM.Update_Mylonganswer;
+begin
+  qrytmp.close;
+  qrytmp.sql.Clear;
+  qrytmp.SQL.Add('update tm set myans=:myans where id=:id');
+  qrytmp.Parameters.ParamByName('id').Value := aWholeTmRec.id;
+  qrytmp.Parameters.ParamByName('myans').Value := aWholeTmRec.myanswer;
+  qrytmp.ExecSQL;
+end;
+
+procedure OpenOneTM.setWholeTmRec(const Value: WholeTmRec);
+begin
+  fWholeTmRec := Value;
+end;
+
+function OpenOneTM.tmtype_chinese: string;
+begin
+  //
+  if FWholeTmRec.TMTYPE = TMTYPE_judgment then
+    result := '判断题）'
+  else if FWholeTmRec.TMTYPE = TMTYPE_ONESELECT then
+    result := '单选题）'
+  else if FWholeTmRec.TMTYPE = TMTYPE_MULTISELECT then
+    result := '多选题）'
+  else
+    result := '主观题）';
+
+end;
+
+procedure OpenOneTM.LongAnsToRichedit(edt: Trichedit);
+begin
+  //
+  edt.Clear;
+  edt.Lines.Add(fWholeTmRec.myanswer);
 end;
 
 end.

@@ -17,19 +17,25 @@ type
 type
   TMLIST = class
   private
-    ATM: tm;
+    ATM: OpenOneTM;
+    CurrentTMREC: WholeTmRec;
     id: integer;
     orderID: LongInt;
     QRYLIST: TADOQUERY;
     QRYTMP: TADOQUERY;
     QuestionWeb: TWebBrowser;
     answerWEB: TWEBBROWSER;
-    answerlbl: TLabel;
+    shortanswerEdit: tedit;
     rowcount: LongInt;
+    LongAnswerRichEdit: trichedit;
     SHORTTM: array of RECshorttm;
-    procedure SETansEdit(const Value: TWEBBROWSER);
+    procedure setAnsWeb(const Value: TWEBBROWSER);
     procedure SETQuestionWeb(VALUE: TWebBrowser);
-    procedure SETanslabel(const Value: TLabel);
+    procedure setAnsEdit(const Value: tedit);
+    procedure SETMyLongAns(const Value: string);
+    procedure SETMyshortans(const Value: string);
+    procedure SETisimportant(const Value: boolean);
+    procedure setLONGAnsRichEdit(const Value: tRICHedit);
   public
     procedure NEXT();
     procedure PRIOR();
@@ -39,10 +45,17 @@ type
     constructor CREATE(CON: TADOCONNECTION);
     procedure GETLISTfrom_zj(kmid, zjid: string);
     procedure GetShorttm();
+
   published
+    property current_myshortans: string write SETMyshortans;
+    property current_mylongans: string write SETMyLongAns;
+    property current_isimportant: boolean write SETisimportant;
+    property tCurrentTMREC: WholeTmRec read CurrentTMREC;
+
     property TQuestionWeb: TWebBrowser write SETQuestionWeb;
-    property tanswerWEB: TWEBBROWSER write SETansEdit;
-    property tanswerlbl: TLabel write SETanslabel;
+    property tanswerWEB: TWEBBROWSER write setAnsWeb;
+    property tshortanswerEdit: tedit write setAnsEdit;
+    property tLongAnswerRichEdit: tRICHedit write setLONGAnsRichEdit;
   end;
 
 implementation
@@ -58,14 +71,14 @@ begin
   QRYTMP := TADOQUERY.CREATE(nil);
   QRYTMP.Connection := CON;
 
-  atm := tm.create(qrytmp);
+  atm := OpenOneTM.create(qrytmp);
+  rowcount := 0;
 
   if qrylist.Active then
     if qrylist.RecordCount > 0 then
     begin
       id := QRYLIST.fieldbyname('id').AsInteger;
-      atm.ID := id;
-      ORDERID := 1;
+      CURRENT;
     end;
 
 end;
@@ -74,24 +87,14 @@ procedure TMLIST.CURRENT;
 begin
   if QRYLIST.RecordCount < 1 then
     exit;
+
   ATM.ID := QRYLIST.FIELDBYNAME('ID').AsInteger;
 
+  CurrentTMREC := ATM.aWholeTmRec;
   ATM.titletoWEB(QuestionWeb);
   ATM.ANStoWEB(answerWEB);
-  ATM.ShortAnswerToLABEL(answerlbl);
-  rowcount := 0;
-end;
-
-procedure TMLIST.FIRST;
-begin
-  if QRYLIST.RecordCount < 1 then
-    exit;
-
-  QRYLIST.First;
-  ATM.ID := QRYLIST.FIELDBYNAME('ID').AsInteger;
-  ATM.titletoWEB(QuestionWeb);
-  ATM.ANStoWEB(answerWEB);
-  ATM.ShortAnswerToLABEL(answerlbl);
+  ATM.ShortAnswerToedit(shortanswerEdit);
+  ATM.LongAnsToRichedit(LongAnswerRichEdit);
 
 end;
 
@@ -124,15 +127,22 @@ begin
   end;
 end;
 
+procedure TMLIST.FIRST;
+begin
+  if QRYLIST.RecordCount < 1 then
+    exit;
+
+  QRYLIST.First;
+  CURRENT;
+
+end;
+
 procedure TMLIST.LAST;
 begin
   if QRYLIST.RecordCount < 1 then
     exit;
   QRYLIST.LAST;
-  ATM.ID := QRYLIST.FIELDBYNAME('ID').AsInteger;
-  ATM.titletoWEB(QuestionWeb);
-  ATM.ANStoWEB(answerWEB);
-  ATM.ShortAnswerToLABEL(answerlbl);
+  CURRENT;
 
 end;
 
@@ -144,43 +154,65 @@ begin
   if not QRYLIST.Eof then
   begin
     QRYLIST.NEXT;
-    ATM.ID := QRYLIST.FIELDBYNAME('ID').AsInteger;
-    ATM.titletoWEB(QuestionWeb);
-    ATM.ANStoWEB(answerWEB);
-    ATM.ShortAnswerToLABEL(answerlbl);
+    CURRENT;
   end;
 
 end;
 
 procedure TMLIST.PRIOR;
 begin
-
   if QRYLIST.RecordCount < 1 then
     exit;
+
   if not QRYLIST.BOF then
   begin
     QRYLIST.Prior;
-    ATM.ID := QRYLIST.FIELDBYNAME('ID').AsInteger;
-    ATM.titletoWEB(QuestionWeb);
-    ATM.ANStoWEB(answerWEB);
-    ATM.ShortAnswerToLABEL(answerlbl);
+    CURRENT;
   end;
 end;
 
-procedure TMLIST.SETansEdit(const Value: TWEBBROWSER);
+procedure TMLIST.setAnsWeb(const Value: TWEBBROWSER);
 begin
   answerWEB := VALUE;
 end;
 
-procedure TMLIST.SETanslabel(const Value: TLabel);
+procedure TMLIST.setAnsEdit(const Value: tedit);
 begin
-  answerlbl := Value;
+  shortanswerEdit := Value;
+end;
+
+procedure TMLIST.SETisimportant(const Value: boolean);
+begin
+  CurrentTMREC.isimportant := Value;
+  ATM.aWholeTmRec := CurrentTMREC;
+  ATM.Update_Isimportant;
+end;
+
+procedure TMLIST.SETMyLongAns(const Value: string);
+begin
+  CurrentTMREC.myanswer := Value;
+  ATM.aWholeTmRec := CurrentTMREC;
+  ATM.Update_Mylonganswer;
+end;
+
+procedure TMLIST.SETMyshortans(const Value: string);
+begin
+  CurrentTMREC.myshortanswer := Value;
+  ATM.aWholeTmRec := CurrentTMREC;
+  ATM.Update_MyShortAnswer;
 end;
 
 procedure TMLIST.SETQuestionWeb(VALUE: TWebBrowser);
 begin
   //
   QuestionWeb := VALUE;
+
+end;
+
+procedure TMLIST.setLONGAnsRichEdit(const Value: tRICHedit);
+begin
+  LongAnswerRichEdit := Value;
+
 end;
 
 end.
