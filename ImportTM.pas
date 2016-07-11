@@ -25,6 +25,7 @@ type
     pnl6: TPanel;
     lbl2: TLabel;
     EjunLicense1: TEjunLicense;
+    btn3: TButton;
     procedure FormCreate(Sender: TObject);
     procedure btn1Click(Sender: TObject);
     procedure btn2Click(Sender: TObject);
@@ -90,7 +91,7 @@ begin
 
   acode := textfile_km_zj_code.create;
 
-  for i := 1 to ejungrid1.RowCount do
+  for i := 1 to ejungrid1.RowCount-1 do
   begin
     if ejungrid1.Cells[1, i].Value <> '' then
     begin
@@ -100,6 +101,7 @@ begin
       adm.KM := ejungrid1.Cells[2, i].TEXT;
       adm.zj := ejungrid1.Cells[3, i].TEXT;
       acode.kmzj_code := adm;
+  //    showmessage(adm.FILENAME +'   '+adm.tmname )
     end;
   end;
 
@@ -141,3 +143,4 @@ begin
 end;
 
 end.
+

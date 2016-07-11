@@ -1,6 +1,6 @@
 object fmImportTM: TfmImportTM
-  Left = 217
-  Top = 555
+  Left = 50
+  Top = 272
   Width = 1059
   Height = 558
   Caption = 'fmImportTM'
@@ -41,6 +41,14 @@ object fmImportTM: TfmImportTM
       Caption = #36873#23450#23548#20837#25991#20214
       TabOrder = 1
       OnClick = btn2Click
+    end
+    object btn3: TButton
+      Left = 886
+      Top = 15
+      Width = 75
+      Height = 25
+      Caption = 'btn3'
+      TabOrder = 2
     end
   end
   object pnl2: TPanel

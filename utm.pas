@@ -2,7 +2,8 @@ unit utm;
 
 interface
 
-uses SysUtils, Classes, forms, DB, ADODB, mshtml, SHDocVw, StdCtrls, ComCtrls;
+uses SysUtils, Classes, forms, DB, ADODB, mshtml, SHDocVw, StdCtrls, ComCtrls,
+  dialogs;
 
 const
   TMTYPE_ONESELECT = 1;
@@ -29,7 +30,7 @@ type
     fID: Integer;
     qrytmp: TADOQuery;
     function GETID: INTEGER;
-    procedure queryid(id: Integer);
+    procedure queryid(const xid: Integer);
     procedure SETID(const Value: INTEGER);
     procedure setWholeTmRec(const Value: WholeTmRec);
 
@@ -83,18 +84,21 @@ begin
   result := FID;
 end;
 
-procedure OpenOneTM.queryid(id: Integer);
+procedure OpenOneTM.queryid(const xid: Integer);
 begin
   //
   qrytmp.close;
   qrytmp.sql.Clear;
   qrytmp.SQL.Add('select * from tm where id=:id');
-  qrytmp.Parameters.ParamByName('id').Value := id;
+  //  qrytmp.Parameters.Clear;
+  qrytmp.Parameters.ParamByName('id').Value := xid;
   qrytmp.Open;
 
   if qrytmp.RecordCount > 0 then
   begin
-    fWholeTmRec.id := id;
+    CLEAR;
+
+    fWholeTmRec.id := xid;
     fWholeTmRec.title := qrytmp.fieldbyname('title').asstring;
     fWholeTmRec.answer := qrytmp.fieldbyname('ans').asstring;
     fWholeTmRec.shortanswer := qrytmp.fieldbyname('xans').asstring;
@@ -103,6 +107,8 @@ begin
     fWholeTmRec.ISerr := qrytmp.fieldbyname('iserr').asboolean;
     fWholeTmRec.isimportant := qrytmp.fieldbyname('istb').asboolean;
     fWholeTmRec.TMTYPE := TMTYPE;
+
+  //    showmessage(IntToStr(fWholeTmRec.id) + '    ' + fWholeTmRec.title);
   end
   else
   begin
@@ -302,8 +308,6 @@ begin
   edt.Clear;
   edt.Lines.Add(fWholeTmRec.myanswer);
 end;
-
-
 
 end.
 

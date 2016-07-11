@@ -465,8 +465,8 @@ begin
         atmlist.GETLISTfrom_zj(strx, stry);
         atmlist.CURRENT;
 
-        lblTmName.Caption := tmenuitem(sender).Parent.Caption + ' >>> ' +
-          tmenuitem(sender).Caption;
+//        lblTmName.Caption := tmenuitem(sender).Parent.Caption + ' >>> ' +
+//          tmenuitem(sender).Caption;
         mysys.tmid := mydb.qrytm.SQL.text;
 
         mysys.km := strx;

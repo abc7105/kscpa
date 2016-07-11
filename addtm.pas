@@ -71,7 +71,7 @@ type
     QRY_ZJ: TADOQUERY;
   private
     procedure openmdb();
-    procedure cleartm();
+
     procedure From_ONE_HTMLFILE(htmfile: string);
     function MAINPATH: string;
     procedure CreateTable();
@@ -104,11 +104,13 @@ type
     procedure WriteToTestOPEN();
     procedure SendToZJDBF();
     procedure SendTokmDBF();
+    procedure cleartm();
     function splitstring(src, dec: string): TStringList;
   published
     property AFILELIST: TStringS read FILELIST write FILELIST;
   public
     procedure From_ALL_HTMLFILE;
+
     function getLISTqry(): TADOQuery;
     constructor create();
     destructor Destroy();
@@ -690,6 +692,7 @@ begin
   begin
 
     lastwjm := FILELIST[ifileno];
+  //  showmessage(lastwjm);
 
     strall := textfromfile(FILELIST[ifileno]);
     str := lowercase(copy(strall, LEN1, LENGTH(STRALL) - LEN1));
@@ -1646,12 +1649,13 @@ begin
     Length(str_filename_km_zj)));
 
   ipos := Pos('#', strtmp);
-  akmzj_code.ZJ := Copy(strtmp, 1, ipos - 1);
+  akmzj_code.ZJ := rightstr('00' + Copy(strtmp, 1, ipos - 1), 3);
   strtmp := Trim(Copy(strtmp, ipos + 1,
     Length(strtmp)));
 
   ipos := Pos('¡¿', strtmp);
-  akmzj_code.KM := Copy(strtmp, 1, ipos - 1);
+  akmzj_code.KM := RightStr('00' + Copy(strtmp, 1, ipos - 1), 2);
 end;
 
 end.
+

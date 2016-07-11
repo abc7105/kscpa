@@ -2,7 +2,7 @@ unit UTMLIST;
 
 interface
 uses utm, SysUtils, Classes, forms, DB, ADODB, mshtml, SHDocVw, StdCtrls,
-  ComCtrls,
+  ComCtrls, StrUtils,
   Dialogs;
 
 type
@@ -18,6 +18,7 @@ type
   TMLIST = class
   private
     ATM: OpenOneTM;
+    FCXNAME: string;
     CurrentTMREC: WholeTmRec;
     id: integer;
     orderID: LongInt;
@@ -40,6 +41,7 @@ type
     procedure setLONGAnsRichEdit(const Value: tRICHedit);
     procedure setlbltmcount(const Value: TLabel);
     procedure setlbltmname(const Value: TLabel);
+    procedure GETCXNAME();
   public
     procedure NEXT();
     procedure PRIOR();
@@ -84,6 +86,7 @@ begin
     if qrylist.RecordCount > 0 then
     begin
       id := QRYLIST.fieldbyname('id').AsInteger;
+      GETCXNAME;
       CURRENT;
     end;
 
@@ -95,6 +98,7 @@ begin
     exit;
 
   ATM.ID := QRYLIST.FIELDBYNAME('ID').AsInteger;
+  //  id := atm.id;
 
   CurrentTMREC := ATM.aWholeTmRec;
   ATM.titletoWEB(QuestionWeb);
@@ -103,6 +107,7 @@ begin
   ATM.LongAnsToRichedit(LongAnswerRichEdit);
   Flbltmcount.caption := ' 第 ' + trim(IntToStr(QRYLIST.RecNo)) + '题 /  总' +
     trim(IntToStr(QRYLIST.RecordCount)) + ' 题';
+  flbltmname.caption := fcxname;
 
 end;
 
@@ -112,10 +117,24 @@ begin
   qrylist.close;
   qrylist.sql.clear;
   qrylist.sql.add(' select * from tm where  tmts in (select ts as tmts from tmts where km=:kmid  and zjid=:zjid) order by sxh');
-  qrylist.Parameters.ParamByName('kmid').Value := kmid;
-  qrylist.Parameters.ParamByName('zjid').Value := zjid;
+  qrylist.Parameters.ParamByName('kmid').Value := rightstr('00' + kmid, 2);
+  qrylist.Parameters.ParamByName('zjid').Value := rightstr('000' + zjid, 3);
   QRYLIST.Open;
   rowcount := QRYLIST.RecordCount;
+
+  //  章节号得知章节名
+  QRYTMP.Close;
+  QRYTMP.SQL.Clear;
+  QRYTMP.SQL.Add('SELECT zj.name as zjname,km.name  as kmname from km,zj where zj.km=km.id and zj.km=:kmid and zj.id=:zjid ');
+  QRYTMP.Parameters.ParamByName('zjid').Value := rightstr('000' + zjid, 3);
+  QRYTMP.Parameters.ParamByName('kmid').Value := rightstr('00' + kmid, 2);
+  QRYTMP.Open;
+
+  if QRYTMP.RecordCount < 1 then
+    exit;
+
+  FCXNAME := Trim(QRYTMP.fieldbyname('kmname').asstring) + '>>' +
+    Trim(QRYTMP.fieldbyname('zjname').asstring)
 
 end;
 
@@ -232,6 +251,36 @@ end;
 procedure TMLIST.setlbltmname(const Value: TLabel);
 begin
   flbltmname := value;
+end;
+
+procedure TMLIST.GETCXNAME;
+var
+  str_zj, str_km: string;
+begin
+  QRYTMP.SQL.Clear;
+  QRYTMP.SQL.Add('SELECT tmts.km as kmid ,tmts.zjid  as zjid from tmts,tm where tmts.ts=tm.tmts  and tm.id=:id ');
+  QRYTMP.Parameters.ParamByName('id').Value := id;
+  QRYTMP.Open;
+
+  if QRYTMP.RecordCount < 1 then
+    exit;
+
+  str_zj := QRYTMP.fieldbyname('zjid').AsString;
+  str_km := QRYTMP.fieldbyname('kmid').AsString;
+
+  QRYTMP.Close;
+  QRYTMP.SQL.Clear;
+  QRYTMP.SQL.Add('SELECT zj.name as zjname,km.name  as kmname from km,zj where zj.km=km.id and zj.km=:kmid and zj.id=:zjid ');
+  QRYTMP.Parameters.ParamByName('zjid').Value := rightstr('000' + str_zj, 3);
+  QRYTMP.Parameters.ParamByName('kmid').Value := rightstr('00' + str_km, 2);
+  QRYTMP.Open;
+
+  if QRYTMP.RecordCount < 1 then
+    exit;
+
+  FCXNAME := Trim(QRYTMP.fieldbyname('kmname').asstring) + '>>' +
+    Trim(QRYTMP.fieldbyname('zjname').asstring)
+
 end;
 
 end.
